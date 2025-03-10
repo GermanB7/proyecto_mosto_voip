@@ -20,9 +20,18 @@ COPY requirements.txt /app/
 # Actualiza pip e instala las dependencias de Python
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# (Si necesitas compilar PJSIP y sus bindings, inserta aquí el proceso correspondiente)
+# Compila e instala PJSIP y sus bindings para Python (pjsua)
+# Se añade la opción --disable-sound para que no intente compilar PortAudio (ya lo tenemos instalado vía apt-get)
+RUN svn checkout --ignore-externals -r 4818 http://svn.pjsip.org/repos/pjproject/trunk/ pjproject && \
+    cd pjproject && \
+    ./configure CFLAGS='-fPIC' --disable-sound && \
+    make dep && \
+    make && \
+    make install && \
+    cd pjsip-apps/src/python && \
+    python setup.py install
 
-# Si la Most VoIP Library no está en PyPI, se espera que la hayas clonado en el directorio "most_voip"
+# (Opcional) Si la Most VoIP Library no está en PyPI, se espera que la hayas clonado en el directorio "most_voip"
 # Y puedes instalarla en modo editable (opcional) con:
 # RUN pip install -e most_voip
 

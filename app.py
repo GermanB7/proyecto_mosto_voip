@@ -3,9 +3,9 @@ from flask import Flask, request, render_template, session, redirect, jsonify
 from call_functions import make_call, setup_tone_hotkey
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'  # Cambia por una clave segura
+app.secret_key = 'your_secret_key'  # Cambia esta clave por una segura
 
-# Variables globales para configuración SIP (se completarán en el formulario)
+# Variables globales para configuración SIP
 sip_user = ""
 sip_pass = ""
 sip_address = ""
@@ -38,9 +38,6 @@ def call_status():
     return render_template('call_status.html', call_status=status)
 
 if __name__ == '__main__':
-    # Configura la detección de tecla 's' para generar el tono.
-    # Si no se encuentran dispositivos de teclado (lo cual es común en un contenedor),
-    # se captura la excepción y se imprime un mensaje.
     try:
         setup_tone_hotkey()
     except Exception as ex:
